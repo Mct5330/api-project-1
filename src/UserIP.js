@@ -18,17 +18,22 @@ export class UserIP extends LitElement {
     super();
     // default values
     this.ip = null;
+    this.location = null;
     // variables can be stored on "this" as the class we're working on is like a
     // Java or other Object Oriented Programming Language
     // so for this one, we're storing a reference to the API endpoint
     // so that if it ever changed it would be easier to update
-    this.ipLookUp = 'https://ip-fast.com/api/ip/?format=json&location=False';
+    this.ipLookUp = 'https://ip-fast.com/api/ip/?format=json&location=True';
+    // messed around for a bit and noticed that changing location=false 
+    // to location=true the country and city data s being retreived and saved somehwere
   }
 
   // properties that you wish to use as data in HTML, CSS, and the updated life-cycle
   static get properties() {
     return {
       ip: { type: String, reflect: true },
+      location: {type: String, reflect: true}, 
+      //line above is used to create the location variable
     };
   }
 
@@ -60,6 +65,8 @@ export class UserIP extends LitElement {
           // or detail.value = whatever the important value is to send
           detail: {
             value: this.ip,
+            value: this.location,
+            //not sure if this does anything
           },
         });
         // this actually fires the event up from this tag in the page based on criteria above
@@ -83,6 +90,9 @@ export class UserIP extends LitElement {
     if (this.ip === null) {
       this.updateUserIP();
     }
+    if(this.location === null) {
+      this.updateUserIP();
+    }//adding this shows the location on the first loines at the top but orverrides what was highlighted in orange
   }
 
   /**
@@ -99,6 +109,10 @@ export class UserIP extends LitElement {
       })
       .then(data => {
         this.ip = data.ip;
+        return data;
+      })
+      .then(data =>{
+        this.location = data.latitude+", "+data.country;
         return data;
       });
   }
@@ -138,9 +152,10 @@ export class UserIP extends LitElement {
   render() {
     return html` <ul>
       <li><strong class="ipaddress">IP address:</strong> ${this.ip}</li>
-      <li></li>
+      <li><strong class="ipaddress">Location:</strong> ${this.location}</li>
     </ul>`;
   }
 }
 
 customElements.define(UserIP.tag, UserIP);
+
