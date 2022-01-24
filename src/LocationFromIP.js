@@ -11,11 +11,14 @@ export class LocationFromIP extends LitElement {
     super();
     this.UserIpInstance = new UserIP();
     this.locationEndpoint = 'https://freegeoip.app/json/';
-    this.long = 10.305385;
-    this.lat = 77.923029;
+    // clicking this ling displays the correct longitute and latitude just cannot figure out
+    // how to plud it in to display on the map.
+    // chaning this does change the logitude and latitude on the map but just not to the correct location
   }
 
   static get properties() {
+    this.long = this.locationEndpoint.longitude;
+    this.lat = this.locationEndpoint.latitude;
     return {};
   }
 
@@ -24,6 +27,9 @@ export class LocationFromIP extends LitElement {
       super.firstUpdated(changedProperties);
     }
     this.getGEOIPData();
+
+    // ended up moving these down here and now cant figure out where they update/ if i am suposeded to use
+    // locationEndpoint or getGEOIPData
   }
 
   async getGEOIPData() {
